@@ -1,0 +1,19 @@
+series: Basic OpenGL with GLFW
+title: Instanced Rendering
+author:
+  name: David Erbelding
+  email: daviderbelding@gmail.com
+  github: https://github.com/Erbelding
+description: Render several objects with only one draw call!
+language: C++
+tags:
+  - Graphics
+  - Opitmization
+extra_resources:
+  - link: http://www.learnopengl.com/#!Advanced-OpenGL/Instancing
+    title: An in depth article on the subject, with more example code.
+connections:
+  - series: Basic OpenGL with GLFW
+    title: Sprite Batching
+  - series: Basic OpenGL with GLFW
+    title: Normal Maps
