@@ -2,7 +2,7 @@
 
 This example combines concepts from the Instancing, 2D deferred lighting, and 3D Point lighting examples.
 It is highly recommended that you look at those examples before trying to understand this one.
-With advanced rendering techniques, it becomes possible to dynamically render significantly larger numbers of lights.
+With advanced rendering techniques, it becomes possible to dynamically render a significantly greater number of lights.
 
 # Setup
 

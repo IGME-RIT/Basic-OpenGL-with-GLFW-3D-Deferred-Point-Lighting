@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "../header/material.h"
 
-//struct for vertex with uv
+//struct for point lights
 struct PointLight
 {
     glm::vec3 m_position;
@@ -43,7 +43,7 @@ struct PointLight
     glm::vec4 m_attenuation;
     glm::vec4 m_color;
 
-    // Makes a 2d vertex with uc and color data.
+    // Defines a point light
     PointLight(glm::vec3 position, float radius, glm::vec4 attenuation, glm::vec4 color) {
         m_position = position;
         m_radius = radius;
