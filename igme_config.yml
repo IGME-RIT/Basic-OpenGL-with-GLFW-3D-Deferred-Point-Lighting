@@ -8,7 +8,7 @@ description: Render lights as a separate pass to increase performance.
 language: C++
 tags:
   - Graphics
-  - Opitmization
+  - Optimization
 extra_resources:
   - link: http://www.shawnhargreaves.com/DeferredShading.pdf
     title: Slides from a GDC talk given about deferred shading.
