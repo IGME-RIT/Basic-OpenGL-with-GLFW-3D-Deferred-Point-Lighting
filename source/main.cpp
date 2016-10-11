@@ -1,5 +1,5 @@
 ﻿/*
-Title: Instanced Rendering
+Title: Deferred Point Lighting
 File Name: main.cpp
 Copyright � 2016
 Author: David Erbelding
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
 	glfwInit();
 
 	// Initialize window
-	GLFWwindow* window = glfwCreateWindow(viewportDimensions.x, viewportDimensions.y, "So Many", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(viewportDimensions.x, viewportDimensions.y, "Lights", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 
 	// Set window callbacks
@@ -195,21 +195,21 @@ int main(int argc, char **argv)
 
     // The transform being used to draw our second shape.
     std::vector<Transform3D> transforms;
-    for (int i = 0; i < 27; i++)
+    for (int i = 0; i < 64; i++)
     {
         Transform3D transform;
-        transform.SetPosition(glm::vec3((i % 3) * 2, (i / 3 % 3) * 2, (i / 9 % 3) * 2));
+        transform.SetPosition(glm::vec3((i % 4) * 2, (i / 4 % 4) * 2, (i / 16 % 4) * 2));
         transform.RotateX(1.5);
         transforms.push_back(transform);
     }
 
     std::vector<PointLight> lights;
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 27; i++)
     {
         PointLight l = PointLight(
-            glm::vec3((i / 1 % 2) * 2 + 1, (i / 2 % 2) * 2 + 1, (i / 4 % 2) * 2 + 1), 8,
+            glm::vec3((i / 1 % 3) * 2 + 1, (i / 3 % 3) * 2 + 1, (i / 9 % 3) * 2 + 1), 6,
             glm::vec4(1, 1, 0, .5f),
-            glm::vec4(i / 16.f, (i % 4) / 4.f, (i % 2) / 2.f, 1));
+            glm::vec4(i / 27.f, (i % 9) / 9.f, (i % 3) / 3.f, 1));
         lights.push_back(l);
     }
 
@@ -238,7 +238,7 @@ int main(int argc, char **argv)
         secCounter += dt;
         if (secCounter > 1.f)
         {
-            std::string title = "All the things! FPS: " + std::to_string(frames);
+            std::string title = "Lights FPS: " + std::to_string(frames);
             glfwSetWindowTitle(window, title.c_str());
             secCounter = 0;
             frames = 0;
@@ -294,8 +294,11 @@ int main(int argc, char **argv)
 
         diffuseNormalMat->Unbind();
 
+        /////////////////////////
+        // Skybox              /
+        ///////////////////////
 
-        // Draw a skybox
+
         glm::mat4 viewRotation = projection * glm::mat4(glm::mat3(view));
         skyMat->SetMatrix("cameraView", viewRotation);
         glDepthFunc(GL_LEQUAL);
@@ -318,6 +321,10 @@ int main(int argc, char **argv)
         // Let the light renderer take care of the rest
         pointLightMat->SetMatrix("cameraView", viewProjection);
         pointLightMat->SetMatrix("viewRotation", viewRotation);
+        // 100 and .1 are the near and far plane.
+        // These values are used to calculate the world position of a pixel from its depth value.
+        pointLightMat->SetFloat("projectionA", 100 / (100 - .1)); 
+        pointLightMat->SetFloat("projectionB", (-100 * .1) / (100 - .1));
         pointLightRenderer->RenderLights(lights, pointLightMat);
 
         ////////////////////////

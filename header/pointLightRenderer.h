@@ -66,6 +66,7 @@ private:
 
     GLuint m_vertexBuffer;
     GLuint m_indexBuffer;
+    GLuint m_instanceBuffer;
 
     std::vector<glm::vec3> m_vertices;
     std::vector<unsigned int> m_indices;

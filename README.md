@@ -1,8 +1,8 @@
-# Basic OpenGL with GLFW: Instanced Rendering
+# Basic OpenGL with GLFW: 3D Deferred Point Lighting
 
-Calling draw separately for each wastes a ton of time.
-Using a similar strategy to the spritebatching example, we can buffer our world matrices, and use them to render hundreds of objects in a single draw call.
-This example uses a skybox from the skybox tutorial, but it isn't required for the instancing part.
+This example combines concepts from the Instancing, 2D deferred lighting, and 3D Point lighting examples.
+It is highly recommended that you look at those examples before trying to understand this one.
+With advanced rendering techniques, it becomes possible to dynamically render significantly larger numbers of lights.
 
 # Setup
 

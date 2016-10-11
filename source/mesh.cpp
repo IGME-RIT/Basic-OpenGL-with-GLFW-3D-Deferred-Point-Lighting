@@ -1,5 +1,5 @@
 /*
-Title: Instanced Rendering
+Title: Deferred Point Lighting
 File Name: mesh.cpp
 Copyright ? 2016
 Author: David Erbelding
@@ -338,6 +338,12 @@ void Mesh::DrawInstanced(std::vector<glm::mat4> matrices)
     {
         glDisableVertexAttribArray(i);
     }
+
+    // Set divisors back to default to prevent errors showing up later.
+    glVertexAttribDivisor(4, 0);
+    glVertexAttribDivisor(5, 0);
+    glVertexAttribDivisor(6, 0);
+    glVertexAttribDivisor(7, 0);
 
 }
 

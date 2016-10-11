@@ -1,5 +1,5 @@
 /*
-Title: Gaussian Blur
+Title: Deferred Point Lighting
 File Name: fullscreenVert.glsl
 Copyright ? 2016
 Author: David Erbelding

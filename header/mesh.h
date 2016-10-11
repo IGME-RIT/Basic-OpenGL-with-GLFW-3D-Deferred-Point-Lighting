@@ -1,5 +1,5 @@
 /*
-Title: Instanced Rendering
+Title: Deferred Point Lightings
 File Name: mesh.h
 Copyright ? 2016
 Author: David Erbelding

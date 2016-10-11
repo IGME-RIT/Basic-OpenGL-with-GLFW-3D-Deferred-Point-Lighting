@@ -1,5 +1,5 @@
 /*
-Title: Instanced Rendering
+Title: Deferred Point Lighting
 File Name: transform2d.h
 Copyright ? 2016
 Author: David Erbelding

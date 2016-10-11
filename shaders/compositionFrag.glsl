@@ -1,6 +1,6 @@
 /*
-Title: 2D Normal Mapping
-File Name: fragment.glsl
+Title: Deferred Point Lighting
+File Name: compositionFrag.glsl
 Copyright ? 2016
 Author: David Erbelding
 Written under the supervision of David I. Schwartz, Ph.D., and
@@ -42,6 +42,7 @@ void main(void)
 	float depth = texelFetch(texDepth, ivec2(gl_FragCoord), 0).x;
 	vec4 light = texelFetch(texLight, ivec2(gl_FragCoord), 0);
 
+	// Don't apply shading to the skybox.
 	if(depth < .99999)
 	{
 		float ndotl = clamp(dot(sunDir, normalize(normal)), 0, 1);

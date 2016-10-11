@@ -1,5 +1,5 @@
 /*
-Title: Instanced Rendering
+Title: Deferred Point Lighting
 File Name: pointLightVert.glsl
 Copyright ? 2016
 Author: David Erbelding
@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #version 400 core
 
+// Structs in glsl are used to pass collections of data more conveniently
+// You have to define the struct at the top of every shader that uses it.
 struct pointLight
 {
 	vec3 position;
@@ -35,25 +37,28 @@ struct pointLight
 
 // Vertex attribute for position
 layout(location = 0) in vec3 in_vertex;
+layout(location = 1) in vec4 in_positionRadius;
+layout(location = 2) in vec4 in_attenuation;
+layout(location = 3) in vec4 in_color;
 
 uniform mat4 cameraView;
 
-uniform pointLight in_light;
+//uniform pointLight in_light;
 
 out pointLight light;
-out vec3 worldPosition;
+out vec3 screenPosition;
 
 void main(void)
 {
 	// Pass the light data forward to the fragment step
-	light.position = vec3(cameraView * vec4(in_light.position, 1));
-	light.radius = in_light.radius;
-	light.attenuation = in_light.attenuation;
-	light.color = in_light.color;
+	light.position = vec3(cameraView * vec4(in_positionRadius.xyz, 1));
+	light.radius = in_positionRadius.w;
+	light.attenuation = in_attenuation;
+	light.color = in_color;
 
 	// Send The world position in screen space
-	gl_Position = cameraView * vec4(in_light.position + (in_vertex * in_light.radius), 1);
+	gl_Position = cameraView * vec4(in_positionRadius.xyz + (in_vertex * in_positionRadius.w), 1);
 
 	// Get the position of the vertex in screen space.
-	worldPosition = vec3(gl_Position);
+	screenPosition = vec3(gl_Position);
 }

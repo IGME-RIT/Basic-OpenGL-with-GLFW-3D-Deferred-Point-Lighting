@@ -1,5 +1,5 @@
 /*
-Title: 2D Normal Mapping
+Title: Deferred Point Lighting
 File Name: pointLightFrag.glsl
 Copyright ? 2016
 Author: David Erbelding
@@ -34,41 +34,51 @@ struct pointLight
 };
 
 in pointLight light;
-in vec3 worldPosition;
+in vec3 screenPosition;
 
 uniform sampler2D texNormal;
 uniform sampler2D texDepth;
 uniform mat4 viewRotation;
+uniform float projectionA;
+uniform float projectionB;
 
 void main(void)
 {
-	// Read normal and depth values from the geometry buffer.
+	// First, we read normal and depth values from the geometry buffer.
 	vec4 normal4 = texelFetch(texNormal, ivec2(gl_FragCoord), 0) * 2 - 1;
+	float depth = texelFetch(texDepth, ivec2(gl_FragCoord), 0).x;
+	
+	// Rotate the normals into view space.
 	vec3 normal = vec3(viewRotation * normal4);
 
 
-	float depth = texelFetch(texDepth, ivec2(gl_FragCoord), 0).x;
 
-	vec3 viewRay = vec3(worldPosition.xy / worldPosition.z, 1);
+	// Next we need to calculate the world position of our object using the depth buffer.
+	// Here we get a view directional vector by dividing the screenposition by it's z value (the depth)
+	vec3 viewRay = screenPosition / screenPosition.z;
 
-	// Calculate our projection constants (you should of course do this in the app code, I'm just showing how to do it)
-	float ProjectionA = 100 / (100 - .1);
-	float ProjectionB = (-100 * .1) / (100 - .1);
 
-	// Sample the depth and convert to linear view space Z (assume it gets sampled as
-	// a floating point value of the range [0,1])
-	float linearDepth = ProjectionB / (depth - ProjectionA);
+	// Convert the depth to linear view space. The is the opposite operation that projection does.
+	float linearDepth = projectionB / (depth - projectionA);
 
-	// The position of the pixel in view space
+
+	// The position of the pixel in view space will be the view direction multiplied by the linearized depth.
 	vec3 positionVS = viewRay * linearDepth;
 
 
+
+	// Now that we have the position of the light and the surface, calculate lighting the same way as done previously.
+
+	// Calculate light angle.
 	vec3 surfaceToLight = light.position - positionVS;
 
+	// Get diffuse value.
 	float ndotl = clamp(dot(normalize(surfaceToLight), normalize(normal)), 0, 1);
 	
+	// Calclate distance and attenuation.
 	float d = clamp(length(surfaceToLight) / light.radius, 0, 1);
 	float attenuation = (1 / (light.attenuation.x * d * d + light.attenuation.y * d + light.attenuation.z)) - light.attenuation.w;
 
+	// Write final color value.
 	gl_FragColor = light.color * ndotl * attenuation;
 }

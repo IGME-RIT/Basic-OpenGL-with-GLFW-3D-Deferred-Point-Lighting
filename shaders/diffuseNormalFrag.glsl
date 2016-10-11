@@ -1,6 +1,6 @@
 /*
-Title: Instanced Rendering
-File Name: fragment.glsl
+Title: Deferred Point Lighting
+File Name: diffuseNormalFrag.glsl
 Copyright ? 2016
 Author: David Erbelding
 Written under the supervision of David I. Schwartz, Ph.D., and

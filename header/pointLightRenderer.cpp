@@ -1,5 +1,5 @@
 /*
-Title: Instanced Rendering
+Title: Deferred Point Lighting
 File Name: pointLightRenderer.cpp
 Copyright ? 2016
 Author: David Erbelding
@@ -92,6 +92,9 @@ PointLightRenderer::PointLightRenderer()
 
     // create buffers for opengl just like normal]
 
+    // Create an instance buffer, we'll fill it when rendering.
+    glGenBuffers(1, &m_instanceBuffer);
+
     // Set up vertex buffer
     glGenBuffers(1, &m_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
@@ -110,6 +113,7 @@ PointLightRenderer::~PointLightRenderer()
 {
     glDeleteBuffers(1, &m_vertexBuffer);
     glDeleteBuffers(1, &m_indexBuffer);
+    glDeleteBuffers(1, &m_instanceBuffer);
 }
 
 void PointLightRenderer::RenderLights(std::vector<PointLight> lights, Material* pointLightMaterial)
@@ -126,42 +130,62 @@ void PointLightRenderer::RenderLights(std::vector<PointLight> lights, Material* 
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE);
 
-
-    // Bind the vertex buffer and set the Vertex Attribute.
-    glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // Enable vertex attribute
-    glEnableVertexAttribArray(0);
-    // Bind element array buffer and draw all indices in the index buffer
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
-
     // Only render the backs of lights, otherwise we render each light surface twice (oops)
     glCullFace(GL_FRONT);
     glEnable(GL_CULL_FACE);
 
-    for (int i = 0; i < lights.size(); i++)
-    {
-        pointLightMaterial->SetVec3("in_light.position", lights[i].m_position);
-        pointLightMaterial->SetFloat("in_light.radius", lights[i].m_radius);
-        pointLightMaterial->SetVec4("in_light.attenuation", lights[i].m_attenuation);
-        pointLightMaterial->SetVec4("in_light.color", lights[i].m_color);
-        pointLightMaterial->Bind();
-        glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, (void*)0);
-    }
+    // Bind the vertex buffer and set the Vertex Attribute.
+    glBindBuffer(GL_ARRAY_BUFFER, m_vertexBuffer);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
 
-    // Make sure to turn culling for faces off before continuing
-    glDisable(GL_CULL_FACE);
-    // Disable vertex attribute and unbind index buffer.
-    glDisableVertexAttribArray(0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    // Do the same thing we normally do when instancing meshes, but for light data
+    glBindBuffer(GL_ARRAY_BUFFER, m_instanceBuffer);
+    glBufferData(GL_ARRAY_BUFFER, lights.size() * sizeof(PointLight), lights.data(), GL_STATIC_DRAW);
+
+    // Next, we tell OpenGL how that data is layed out.
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(PointLight), (void*)(0));
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(PointLight), (void*)(sizeof(float) * 4));
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(PointLight), (void*)(sizeof(float) * 8));
+
+    // Set Divisors for instance buffer
+    glVertexAttribDivisor(1, 1);
+    glVertexAttribDivisor(2, 1);
+    glVertexAttribDivisor(3, 1);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
 
+    // Enable vertex attribute
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+    // Bind element array buffer and draw all indices in the index buffer
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
+
+    // Bind material and draw
+    pointLightMaterial->Bind();
+
+    glDrawElementsInstanced(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, (void*)0, lights.size());
 
     pointLightMaterial->Unbind();
 
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    // Disable vertex attribute and unbind index buffer.
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
+
+    // Set divisors back to default.
+    glVertexAttribDivisor(1, 0);
+    glVertexAttribDivisor(2, 0);
+    glVertexAttribDivisor(3, 0);
+
+
+    // Make sure to turn culling for faces off before continuing
+    glDisable(GL_CULL_FACE);
 
     // turn off blending
     glDisable(GL_BLEND);

@@ -1,19 +1,23 @@
 series: Basic OpenGL with GLFW
-title: Instanced Rendering
+title: 3D Deferred Point Lighting
 author:
   name: David Erbelding
   email: daviderbelding@gmail.com
   github: https://github.com/Erbelding
-description: Render several objects with only one draw call!
+description: Render lights as a separate pass to increase performance.
 language: C++
 tags:
   - Graphics
   - Opitmization
 extra_resources:
-  - link: http://www.learnopengl.com/#!Advanced-OpenGL/Instancing
-    title: An in depth article on the subject, with more example code.
+  - link: http://www.shawnhargreaves.com/DeferredShading.pdf
+    title: Slides from a GDC talk given about deferred shading.
+  - link: https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/
+    title: An article about calculating world position from a depth buffer.
 connections:
   - series: Basic OpenGL with GLFW
-    title: Sprite Batching
+    title: Instanced Rendering
   - series: Basic OpenGL with GLFW
-    title: Normal Maps
+    title: 2D Deferred Point Lighting
+  - series: Basic OpenGL with GLFW
+    title: Point Lighting

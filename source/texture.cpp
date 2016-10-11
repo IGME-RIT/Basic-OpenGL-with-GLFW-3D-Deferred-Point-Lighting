@@ -1,5 +1,5 @@
 /*
-Title: 2D Normal Mapping
+Title: Deferred Point Lighting
 File Name: texture.cpp
 Copyright ? 2016
 Author: David Erbelding
