@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeferredPoint3D", "DeferredPoint3D.vcxproj", "{C5D85AB4-C503-4618-AB2A-8A4E5F6EFB23}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5D85AB4-C503-4618-AB2A-8A4E5F6EFB23}.Debug|x64.ActiveCfg = Debug|x64
+		{C5D85AB4-C503-4618-AB2A-8A4E5F6EFB23}.Debug|x64.Build.0 = Debug|x64
+		{C5D85AB4-C503-4618-AB2A-8A4E5F6EFB23}.Debug|x86.ActiveCfg = Debug|Win32
+		{C5D85AB4-C503-4618-AB2A-8A4E5F6EFB23}.Debug|x86.Build.0 = Debug|Win32
+		{C5D85AB4-C503-4618-AB2A-8A4E5F6EFB23}.Release|x64.ActiveCfg = Release|x64
+		{C5D85AB4-C503-4618-AB2A-8A4E5F6EFB23}.Release|x64.Build.0 = Release|x64
+		{C5D85AB4-C503-4618-AB2A-8A4E5F6EFB23}.Release|x86.ActiveCfg = Release|Win32
+		{C5D85AB4-C503-4618-AB2A-8A4E5F6EFB23}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ABCB2D1E-0F4A-4DE4-8C2E-809E7CDF65FE}
+	EndGlobalSection
+EndGlobal
